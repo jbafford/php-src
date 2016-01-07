@@ -15736,7 +15736,7 @@ fe_fetch_r_exit:
 	if (EXPECTED(opline->op2_type == IS_CV)) {
 		zval *variable_ptr = _get_zval_ptr_cv_undef_BP_VAR_W(execute_data, opline->op2.var);
 		zend_assign_to_variable(variable_ptr, value, IS_CV);
-	} else {
+	} else if (opline->op2_type != IS_UNUSED) {
 		zval *res = EX_VAR(opline->op2.var);
 		zend_refcounted *gc = Z_COUNTED_P(value);
 

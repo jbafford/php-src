@@ -6143,7 +6143,7 @@ ZEND_VM_C_LABEL(fe_fetch_r_exit):
 	if (EXPECTED(OP2_TYPE == IS_CV)) {
 		zval *variable_ptr = _get_zval_ptr_cv_undef_BP_VAR_W(execute_data, opline->op2.var);
 		zend_assign_to_variable(variable_ptr, value, IS_CV);
-	} else {
+	} else if (OP2_TYPE != IS_UNUSED) {
 		zval *res = EX_VAR(opline->op2.var);
 		zend_refcounted *gc = Z_COUNTED_P(value);
 
