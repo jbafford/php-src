@@ -378,8 +378,8 @@ static zend_vm_opcode_handler_func_t zend_vm_get_opcode_handler_func(uint8_t opc
 #else
 # define ZEND_OPCODE_HANDLER_ARGS zend_execute_data *execute_data, const zend_op *opline
 # define ZEND_OPCODE_HANDLER_ARGS_PASSTHRU execute_data, opline
-# define ZEND_OPCODE_HANDLER_ARGS_EX ZEND_OPCODE_HANDLER_ARGS, 
-# define ZEND_OPCODE_HANDLER_ARGS_PASSTHRU_EX ZEND_OPCODE_HANDLER_ARGS_PASSTHRU, 
+# define ZEND_OPCODE_HANDLER_ARGS_EX ZEND_OPCODE_HANDLER_ARGS,
+# define ZEND_OPCODE_HANDLER_ARGS_PASSTHRU_EX ZEND_OPCODE_HANDLER_ARGS_PASSTHRU,
 #endif
 
 #if defined(ZEND_VM_FP_GLOBAL_REG) && defined(ZEND_VM_IP_GLOBAL_REG)
@@ -3136,7 +3136,7 @@ fe_fetch_r_exit:
 	if (EXPECTED(opline->op2_type == IS_CV)) {
 		zval *variable_ptr = EX_VAR(opline->op2.var);
 		zend_assign_to_variable(variable_ptr, value, IS_CV, EX_USES_STRICT_TYPES());
-	} else {
+	} else if (opline->op2_type != IS_UNUSED) {
 		zval *res = EX_VAR(opline->op2.var);
 		zend_refcounted *gc = Z_COUNTED_P(value);
 
@@ -58875,7 +58875,7 @@ fe_fetch_r_exit:
 	if (EXPECTED(opline->op2_type == IS_CV)) {
 		zval *variable_ptr = EX_VAR(opline->op2.var);
 		zend_assign_to_variable(variable_ptr, value, IS_CV, EX_USES_STRICT_TYPES());
-	} else {
+	} else if (opline->op2_type != IS_UNUSED) {
 		zval *res = EX_VAR(opline->op2.var);
 		zend_refcounted *gc = Z_COUNTED_P(value);
 
