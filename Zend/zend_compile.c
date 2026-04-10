@@ -6384,6 +6384,15 @@ static void zend_compile_foreach(zend_ast *ast) /* {{{ */
 	zend_op *opline;
 	uint32_t opnum_reset, opnum_fetch;
 
+	if (value_ast->kind == ZEND_AST_ZVAL) {
+		zend_string *class_name = zend_ast_get_str(value_ast);
+		zend_uchar type = zend_lookup_builtin_type_by_name(class_name);
+
+		if(type != IS_VOID) {
+			zend_error_noreturn(E_COMPILE_ERROR, "foreach value target must be variable or void");
+		}
+	}
+
 	if (key_ast) {
 		if (key_ast->kind == ZEND_AST_REF) {
 			zend_error_noreturn(E_COMPILE_ERROR, "Key element cannot be a reference");
@@ -6425,6 +6434,8 @@ static void zend_compile_foreach(zend_ast *ast) /* {{{ */
 
 	if (is_this_fetch(value_ast)) {
 		zend_error_noreturn(E_COMPILE_ERROR, "Cannot re-assign $this");
+	} else if (value_ast->kind == ZEND_AST_ZVAL) { // IS_VOID
+		opline->op2_type = IS_UNUSED;
 	} else if (value_ast->kind == ZEND_AST_VAR &&
 		zend_try_compile_cv(&value_node, value_ast, BP_VAR_R) == SUCCESS) {
 		SET_NODE(opline->op2, &value_node);

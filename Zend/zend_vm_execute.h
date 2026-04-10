@@ -3123,7 +3123,7 @@ fe_fetch_r_exit:
 	if (EXPECTED(opline->op2_type == IS_CV)) {
 		zval *variable_ptr = EX_VAR(opline->op2.var);
 		zend_assign_to_variable(variable_ptr, value, IS_CV, EX_USES_STRICT_TYPES());
-	} else {
+	} else if (opline->op2_type != IS_UNUSED) {
 		if (UNEXPECTED(Z_ISREF_P(value))) {
 			value = Z_REFVAL_P(value);
 			value_type = Z_TYPE_INFO_P(value);
@@ -55835,7 +55835,7 @@ fe_fetch_r_exit:
 	if (EXPECTED(opline->op2_type == IS_CV)) {
 		zval *variable_ptr = EX_VAR(opline->op2.var);
 		zend_assign_to_variable(variable_ptr, value, IS_CV, EX_USES_STRICT_TYPES());
-	} else {
+	} else if (opline->op2_type != IS_UNUSED) {
 		if (UNEXPECTED(Z_ISREF_P(value))) {
 			value = Z_REFVAL_P(value);
 			value_type = Z_TYPE_INFO_P(value);
